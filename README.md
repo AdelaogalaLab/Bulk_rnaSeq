@@ -17,9 +17,11 @@ The RNA-Seq data preprocessing workflow was executed on the UB-HPC (CCR) cluster
 ###Job Submission on HPC
 Below is the SLURM script used to submit the job on the HPC cluster:
 
-<br>
-```bash
+### Job Submission on HPC
 
+Below is the SLURM script used to submit the job on the HPC cluster:
+
+```bash
 #!/bin/bash
 #SBATCH --time=72:00:00
 #SBATCH --nodes=1
@@ -42,4 +44,3 @@ nextflow run /../nf-core-rnaseq-3.12.0/workflow/ \
   --max_time 72.h \
   --max_memory 224.GB \
   --max_cpus 32
-```
