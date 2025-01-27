@@ -167,8 +167,7 @@ A volcano plot is a scatterplot showing log2FoldChange vs -log(padj) for each ge
 Identify overlapping genes among upregulated and downregulated groups using ggVennDiagram and VennDiagram.
 
 * Gene Set Enrichment Analysis (GSEA)
-GSEA identifies pathways enriched in one condition compared to another. For example, it can determine if genes in a hallmark pathway are collectively upregulated with Dex, helping validate the experiment and identify other affected pathways.
-
+GSEA identifies pathways enriched in one condition compared to another. For example, it can determine if genes in a hallmark pathway are collectively upregulated with treatment, helping validate the experiment and identify other affected pathways.
 Gene sets from the msigdbr library and custom sets are combined into a single dataset (all_sets).
 Genes are ranked by their log fold change (logFC) between selected groups (e.g., normal vs treatment) and filtered by specific contrasts of interest.
 The ranked gene lists are analyzed using the GSEA() function from the clusterProfiler package with the combined gene sets as input.
