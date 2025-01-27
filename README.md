@@ -153,21 +153,30 @@ Identify upregulated and downregulated genes across selected contrast IDs.
 Save significant genes in CSV format for further visualization.
 
 3. Visualization
-Volcano Plots
 
-Visualize log fold changes (logFC) and significance (-log10(p-value)) of genes for each contrast using ggplot2.
+PCA plots
+A PCA plot helps us see how similar or different the samples are. Samples with similar gene expression will be closer together on the plot. It uses an x-y coordinate system, where the two axes represent the main patterns (principal components) that explain most of the differences in the data.
+
+Differential Gene Heatmap
+A differential gene heatmap shows the normalized values of the top upregulated genes that differ significantly between comparison groups (e.g., normal vs treatment). Genes are filtered by padj and ranked by the highest log2FoldChange. The values are scaled across samples to highlight differences.
+
+Volcano Plots
+A volcano plot is a scatterplot showing log2FoldChange vs -log(padj) for each gene. It highlights genes that are highly upregulated, downregulated, or have significant p-values. We discussed different example for normal vs treatment comparison for different cell lines.Visualize log fold changes (logFC) and significance (-log10(p-value)) of genes for each contrast using ggplot2.
 
 Venn Diagrams
-
 Identify overlapping genes among upregulated and downregulated groups using ggVennDiagram and VennDiagram.
 
+Gene Set Enrichment Analysis (GSEA)
+GSEA identifies pathways enriched in one condition compared to another. For example, it can determine if genes in a hallmark pathway are collectively upregulated with Dex, helping validate the experiment and identify other affected pathways.
+
+Gene sets from the msigdbr library and custom sets are combined into a single dataset (all_sets).
+Genes are ranked by their log fold change (logFC) between selected groups (e.g., normal vs treatment) and filtered by specific contrasts of interest.
+The ranked gene lists are analyzed using the GSEA() function from the clusterProfiler package with the combined gene sets as input.
+Results are annotated with metadata and categorized into upregulated, downregulated, or unchanged pathways based on the normalized enrichment score (NES) and q-value.
+This approach allows efficient pathway analysis across multiple contrasts, providing insights into pathways influenced under different conditions.
+
 Bubble Plots
-
 Generate bubble plots for enriched pathways using GSEA results. The size of bubbles represents significance, and colors indicate normalized enrichment scores (NES).
-
-Heatmaps
-
-Create heatmaps of overlapping upregulated and downregulated genes using pheatmap.
 
 Outputs
 
