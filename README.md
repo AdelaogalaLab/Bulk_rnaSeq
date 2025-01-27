@@ -110,7 +110,7 @@ Gene-level and transcript-level expression matrices (*.rsem.genes.results and *.
 
 This repository contains the R code and analysis steps for the bulk rna sequencing project. The code performs differential gene expression analysis, pathway enrichment analysis, and visualization of key results. Below is a detailed explanation of the key scripts and their outputs.
 
-# Table of Contents
+## Table of Contents
 1. Overview
 2. Requirements]
 3. Data Input]
@@ -118,8 +118,6 @@ This repository contains the R code and analysis steps for the bulk rna sequenci
 5. Visualization
 6. Outputs
 7. Contact
-
----
 
 ## Overview
 This project focuses on differential gene expression analysis, GSEA, bubble plot, and pathway enrichment analysis to identify the biological significance of MECOM regulation. Key methodologies include:
@@ -167,9 +165,11 @@ Analysis Workflow
 1. Preprocessing and Normalization
 Filter out lowly expressed genes using edgeR's cpm and filterByExpr.
 Normalize data using the calcNormFactors function.
+
 2. Differential Gene Expression Analysis
 Identify upregulated and downregulated genes across selected contrast IDs.
 Save significant genes in CSV format for further visualization.
+
 3. Visualization
 Volcano Plots
 
@@ -205,11 +205,4 @@ Visualization Examples
 
 PCA Plot, Volcano Plot, Heatmap, Bubble Plot, Enrichment Plot, and GSEA plot
 
-Contact
-
-For questions or feedback, please reach out to:
-
-Name: Dr. Tej Sharma, PostDoc Dr. RemiAdele Lab 
-Email: tejsharm@buffalo.edu
-Institution: Jacobs School of Medecine and Biomedical Sciences
 Feel free to open an issue in this repository for further assistance.
