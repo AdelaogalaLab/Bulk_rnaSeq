@@ -131,7 +131,7 @@ Ensure these packages are installed before running the scripts:
 - `clusterProfiler`
 
 Install packages using:
-```r
+
 install.packages(c("dplyr", "ggplot2", "ggrepel", "readxl", "pheatmap", "VennDiagram"))
 BiocManager::install(c("edgeR", "msigdbr", "clusterProfiler", "ggVennDiagram"))
 Data Input
