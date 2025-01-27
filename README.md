@@ -12,10 +12,10 @@ Differential Expression Analysis: Identifying genes with significant expression 
 Visualization: Creating informative plots to represent the data.
 
 
-The RNA-Seq data preprocessing workflow was executed on the UB-HPC (CCR) cluster using the nf-core/rnaseq pipeline. The goal was to process raw FASTQ files into normalized expression matrices suitable for downstream differential expression gene analysis and pathway enrichment analyses.
+The RNA-Seq data preprocessing workflow was executed on the UB-CCR cluster using the nf-core/rnaseq pipeline. The goal was to process raw FASTQ files into normalized expression matrices suitable for downstream differential expression gene analysis and pathway enrichment analyses.
 
 ###Job Submission on HPC
-Below is the SLURM script used to submit the job on the HPC cluster:
+Below is the SLURM script used to submit the job on the UB-CCR cluster:
 
 ### Job Submission on HPC
 
