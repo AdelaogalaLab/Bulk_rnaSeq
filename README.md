@@ -4,11 +4,11 @@
 
 RNA sequencing (RNA-seq) is a powerful technique used to analyze the transcriptome of an organism, providing insights into gene expression patterns under various conditions. In this guide, we outline a comprehensive pipeline for processing RNA-seq data, specifically tailored from raw data acquisition to complete downstream analysis. This pipeline encompasses:
 
-Data Acquisition: Retrieving raw sequencing data.
-Quality Control: Assessing and ensuring the quality of the raw data.
-Read Alignment: Mapping sequencing reads to a reference genome.
-Quantification: Measuring gene expression levels.
-Differential Expression Analysis: Identifying genes with significant expression changes between conditions.
+Data Acquisition: Retrieving raw sequencing data. (  )
+Quality Control: Assessing and ensuring the quality of the raw data.(  )
+Read Alignment: Mapping sequencing reads to a reference genome. (  )
+Quantification: Measuring gene expression levels.(  )
+Differential Expression Analysis: Identifying genes with significant expression changes between conditions.(  )
 Visualization: Creating informative plots to represent the data.
 
 The RNA-Seq data preprocessing workflow was executed on the UB-CCR cluster using the nf-core/rnaseq pipeline. The goal was to process raw FASTQ files into normalized expression matrices suitable for downstream differential expression gene analysis and pathway enrichment analyses.
