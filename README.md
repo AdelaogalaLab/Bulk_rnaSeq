@@ -11,15 +11,10 @@ Quantification: Measuring gene expression levels.
 Differential Expression Analysis: Identifying genes with significant expression changes between conditions.
 Visualization: Creating informative plots to represent the data.
 
-
 The RNA-Seq data preprocessing workflow was executed on the UB-CCR cluster using the nf-core/rnaseq pipeline. The goal was to process raw FASTQ files into normalized expression matrices suitable for downstream differential expression gene analysis and pathway enrichment analyses.
 
-###Job Submission on HPC
+# Job Submission on HPC
 Below is the SLURM script used to submit the job on the UB-CCR cluster:
-
-### Job Submission on HPC
-
-Below is the SLURM script used to submit the job on the HPC cluster:
 
 ```bash
 #!/bin/bash
@@ -46,6 +41,14 @@ nextflow run /../nf-core-rnaseq-3.12.0/workflow/ \
   --max_cpus 32
 
 ```
+Explanation of SLURM Parameters
+--time: Total runtime of the job (72 hours).
+--nodes: Number of nodes requested (1 node with 32 cores).
+--mem: Memory allocation (256 GB).
+--job-name: Job name for easy identification in the job queue.
+--output: Output log file for pipeline progress and errors.
+--partition: HPC partition to use (general-compute).
+--max_time, --max_memory, --max_cpus: Specifies pipeline resource limits.
 
 ### Workflow Description
 
@@ -57,13 +60,11 @@ A samplesheet (samplesheet.csv) provides metadata for all RNA-Seq samples.
 Required fields include sample IDs, file paths for paired-end or single-end FASTQ files, and experimental conditions.
 
 2. Quality Control
-
 Tool: FastQC
 Assesses base quality scores, GC content, adapter contamination, and other metrics.
 MultiQC: Aggregates QC reports for all samples into a single report for easy visualization.
 
 3. Read Alignment
-
 Tool: STAR
 Aligns raw reads to the GRCh37 reference genome.
 Outputs include:
@@ -71,7 +72,6 @@ BAM files (*.Aligned.sortedByCoord.out.bam).
 Alignment statistics (*.Log.final.out).
 
 4. Quantification
-
 Tool: RSEM
 Quantifies gene- and transcript-level expression.
 Outputs:
@@ -79,17 +79,8 @@ Gene-level counts (*.rsem.genes.results).
 Transcript-level counts (*.rsem.isoforms.results).
 
 5. Normalization
-
 Metric: Transcripts Per Million (TPM).
 Ensures comparability across samples by normalizing for sequencing depth and gene length.
-Explanation of SLURM Parameters
---time: Total runtime of the job (72 hours).
---nodes: Number of nodes requested (1 node with 32 cores).
---mem: Memory allocation (256 GB).
---job-name: Job name for easy identification in the job queue.
---output: Output log file for pipeline progress and errors.
---partition: HPC partition to use (general-compute).
---max_time, --max_memory, --max_cpus: Specifies pipeline resource limits.
 
 Pipeline Outputs
 The pipeline generates the following outputs:
@@ -103,27 +94,18 @@ Alignment Files
 Sorted BAM files for all samples.
 Alignment statistics (STAR .Log.final.out files).
 Quantification Files
-
 Gene-level and transcript-level expression matrices (*.rsem.genes.results and *.rsem.isoforms.results).
+
 ***
+
 ## Down stream Analysis
-
 This repository contains the R code and analysis steps for the bulk rna sequencing project. The code performs differential gene expression analysis, pathway enrichment analysis, and visualization of key results. Below is a detailed explanation of the key scripts and their outputs.
-
-## Table of Contents
-1. Overview
-2. Requirements]
-3. Data Input]
-4. Analysis Workflow
-5. Visualization
-6. Outputs
-7. Contact
 
 ## Overview
 This project focuses on differential gene expression analysis, GSEA, bubble plot, and pathway enrichment analysis to identify the biological significance of MECOM regulation. Key methodologies include:
 - **RNA-Seq normalization and filtering**
-- **Gene Set Enrichment Analysis (GSEA)**
 - **Visualization of differential expression results using volcano plots, bubble plots, heatmaps, and Venn diagrams**
+- - **Gene Set Enrichment Analysis (GSEA)**
 - **Identification of overlapping upregulated and downregulated genes**
 
 ---
