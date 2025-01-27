@@ -184,7 +184,7 @@ Key Files
 
 Normalized Counts: MECOM_Project_rna_mean_normalized-counts-per-million.csv
 
-Volcano Plots: Generated for each contrast ID (e.g., Volcano_C42B_ER_shMECOM_v_control.pdf).
+Volcano Plots: Generated for each contrast ID (e.g., Volcano_C42B_ER_shMECOM_v_control.pdf)
 
 Venn Diagrams:
 
@@ -193,6 +193,7 @@ Down_regulated.pdf
 Heatmaps: Heatmap_top_genes.pdf
 
 Bubble Plots: Pathway-level visualization for each contrast (e.g., Bubble_Plot_for_LREX_shMECOM_v_control.pdf).
+
 Gene Lists: Overlapping and regulated genes in CSV format.
 
 Example Output Snippets
@@ -201,5 +202,3 @@ All Regulated Genes: All_UpandDown_regulatedGenes_Selected_Contrasts.csv
 Visualization Examples
 
 PCA Plot, Volcano Plot, Heatmap, Bubble Plot, Enrichment Plot, and GSEA plot
-
-Feel free to open an issue in this repository for further assistance.
