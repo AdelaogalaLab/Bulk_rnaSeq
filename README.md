@@ -44,3 +44,26 @@ nextflow run /../nf-core-rnaseq-3.12.0/workflow/ \
   --max_time 72.h \
   --max_memory 224.GB \
   --max_cpus 32
+
+### Workflow Description
+
+The preprocessing pipeline consists of the following steps:
+
+1. Input Metadata
+
+A samplesheet (samplesheet.csv) provides metadata for all RNA-Seq samples.
+Required fields include sample IDs, file paths for paired-end or single-end FASTQ files, and experimental conditions.
+
+2. Quality Control
+
+Tool: FastQC
+Assesses base quality scores, GC content, adapter contamination, and other metrics.
+MultiQC: Aggregates QC reports for all samples into a single report for easy visualization.
+
+3. Read Alignment
+
+Tool: STAR
+Aligns raw reads to the GRCh37 reference genome.
+Outputs include:
+BAM files (*.Aligned.sortedByCoord.out.bam).
+Alignment statistics (*.Log.final.out).
