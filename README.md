@@ -154,19 +154,19 @@ Save significant genes in CSV format for further visualization.
 
 3. Visualization
 
-PCA plots
+* PCA plots *
 A PCA plot helps us see how similar or different the samples are. Samples with similar gene expression will be closer together on the plot. It uses an x-y coordinate system, where the two axes represent the main patterns (principal components) that explain most of the differences in the data.
 
-Differential Gene Heatmap
+* Differential Gene Heatmap *
 A differential gene heatmap shows the normalized values of the top upregulated genes that differ significantly between comparison groups (e.g., normal vs treatment). Genes are filtered by padj and ranked by the highest log2FoldChange. The values are scaled across samples to highlight differences.
 
-Volcano Plots
+* Volcano Plots *
 A volcano plot is a scatterplot showing log2FoldChange vs -log(padj) for each gene. It highlights genes that are highly upregulated, downregulated, or have significant p-values. We discussed different example for normal vs treatment comparison for different cell lines.Visualize log fold changes (logFC) and significance (-log10(p-value)) of genes for each contrast using ggplot2.
 
-Venn Diagrams
+* Venn Diagrams *
 Identify overlapping genes among upregulated and downregulated groups using ggVennDiagram and VennDiagram.
 
-Gene Set Enrichment Analysis (GSEA)
+* Gene Set Enrichment Analysis (GSEA) *
 GSEA identifies pathways enriched in one condition compared to another. For example, it can determine if genes in a hallmark pathway are collectively upregulated with Dex, helping validate the experiment and identify other affected pathways.
 
 Gene sets from the msigdbr library and custom sets are combined into a single dataset (all_sets).
@@ -175,10 +175,10 @@ The ranked gene lists are analyzed using the GSEA() function from the clusterPro
 Results are annotated with metadata and categorized into upregulated, downregulated, or unchanged pathways based on the normalized enrichment score (NES) and q-value.
 This approach allows efficient pathway analysis across multiple contrasts, providing insights into pathways influenced under different conditions.
 
-Bubble Plots
+* Bubble Plots *
 Generate bubble plots for enriched pathways using GSEA results. The size of bubbles represents significance, and colors indicate normalized enrichment scores (NES).
 
-Outputs
+** Outputs
 
 Key Files
 Normalized Counts: MECOM_Project_rna_mean_normalized-counts-per-million.csv
