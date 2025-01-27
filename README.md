@@ -45,6 +45,8 @@ nextflow run /../nf-core-rnaseq-3.12.0/workflow/ \
   --max_memory 224.GB \
   --max_cpus 32
 
+```
+
 ### Workflow Description
 
 The preprocessing pipeline consists of the following steps:
