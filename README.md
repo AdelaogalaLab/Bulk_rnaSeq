@@ -18,7 +18,8 @@ The RNA-Seq data preprocessing workflow was executed on the UB-HPC (CCR) cluster
 Below is the SLURM script used to submit the job on the HPC cluster:
 
 <br>
-```
+```bash
+
 #!/bin/bash
 #SBATCH --time=72:00:00
 #SBATCH --nodes=1
