@@ -69,3 +69,147 @@ Aligns raw reads to the GRCh37 reference genome.
 Outputs include:
 BAM files (*.Aligned.sortedByCoord.out.bam).
 Alignment statistics (*.Log.final.out).
+
+4. Quantification
+
+Tool: RSEM
+Quantifies gene- and transcript-level expression.
+Outputs:
+Gene-level counts (*.rsem.genes.results).
+Transcript-level counts (*.rsem.isoforms.results).
+
+5. Normalization
+
+Metric: Transcripts Per Million (TPM).
+Ensures comparability across samples by normalizing for sequencing depth and gene length.
+Explanation of SLURM Parameters
+--time: Total runtime of the job (72 hours).
+--nodes: Number of nodes requested (1 node with 32 cores).
+--mem: Memory allocation (256 GB).
+--job-name: Job name for easy identification in the job queue.
+--output: Output log file for pipeline progress and errors.
+--partition: HPC partition to use (general-compute).
+--max_time, --max_memory, --max_cpus: Specifies pipeline resource limits.
+
+Pipeline Outputs
+The pipeline generates the following outputs:
+
+Quality Control Reports
+
+FastQC: Individual QC reports for each sample.
+MultiQC: Aggregated QC metrics.
+Alignment Files
+
+Sorted BAM files for all samples.
+Alignment statistics (STAR .Log.final.out files).
+Quantification Files
+
+Gene-level and transcript-level expression matrices (*.rsem.genes.results and *.rsem.isoforms.results).
+***
+## Down stream Analysis
+
+This repository contains the R code and analysis steps for the bulk rna sequencing project. The code performs differential gene expression analysis, pathway enrichment analysis, and visualization of key results. Below is a detailed explanation of the key scripts and their outputs.
+
+# Table of Contents
+1. Overview
+2. Requirements]
+3. Data Input]
+4. Analysis Workflow
+5. Visualization
+6. Outputs
+7. Contact
+
+---
+
+## Overview
+This project focuses on differential gene expression analysis, GSEA, bubble plot, and pathway enrichment analysis to identify the biological significance of MECOM regulation. Key methodologies include:
+- **RNA-Seq normalization and filtering**
+- **Gene Set Enrichment Analysis (GSEA)**
+- **Visualization of differential expression results using volcano plots, bubble plots, heatmaps, and Venn diagrams**
+- **Identification of overlapping upregulated and downregulated genes**
+
+---
+
+## Requirements
+To reproduce this analysis, the following tools and R packages are required:
+
+### Tools
+- R (version 4.0 or higher)
+- RStudio (recommended)
+
+### R Packages
+Ensure these packages are installed before running the scripts:
+- `edgeR`
+- `dplyr`
+- `ggplot2`
+- `ggrepel`
+- `readxl`
+- `pheatmap`
+- `VennDiagram`
+- `ggVennDiagram`
+- `msigdbr`
+- `clusterProfiler`
+
+Install packages using:
+```r
+install.packages(c("dplyr", "ggplot2", "ggrepel", "readxl", "pheatmap", "VennDiagram"))
+BiocManager::install(c("edgeR", "msigdbr", "clusterProfiler", "ggVennDiagram"))
+Data Input
+
+Required Files
+Gene expression counts: A TSV file containing normalized counts per gene.
+Sample sheet: An Excel file (Sample_Sheet.xlsx) providing metadata for samples.
+Pathway shortcuts file: An Excel file (pathways_shortcuts_final.xlsx) linking pathway names with abbreviations.
+Ensure all input files are placed in the working directory.
+
+Analysis Workflow
+
+1. Preprocessing and Normalization
+Filter out lowly expressed genes using edgeR's cpm and filterByExpr.
+Normalize data using the calcNormFactors function.
+2. Differential Gene Expression Analysis
+Identify upregulated and downregulated genes across selected contrast IDs.
+Save significant genes in CSV format for further visualization.
+3. Visualization
+Volcano Plots
+
+Visualize log fold changes (logFC) and significance (-log10(p-value)) of genes for each contrast using ggplot2.
+
+Venn Diagrams
+
+Identify overlapping genes among upregulated and downregulated groups using ggVennDiagram and VennDiagram.
+
+Bubble Plots
+
+Generate bubble plots for enriched pathways using GSEA results. The size of bubbles represents significance, and colors indicate normalized enrichment scores (NES).
+
+Heatmaps
+
+Create heatmaps of overlapping upregulated and downregulated genes using pheatmap.
+
+Outputs
+
+Key Files
+Normalized Counts: MECOM_Project_rna_mean_normalized-counts-per-million.csv
+Volcano Plots: Generated for each contrast ID (e.g., Volcano_C42B_ER_shMECOM_v_control.pdf).
+Venn Diagrams:
+Up_regulated.pdf
+Down_regulated.pdf
+Heatmaps: Heatmap_top_genes.pdf
+Bubble Plots: Pathway-level visualization for each contrast (e.g., Bubble_Plot_for_LREX_shMECOM_v_control.pdf).
+Gene Lists: Overlapping and regulated genes in CSV format.
+Example Output Snippets
+Overlapping Genes: shMECOM_overlapping_genes_data.csv
+All Regulated Genes: All_UpandDown_regulatedGenes_Selected_Contrasts.csv
+Visualization Examples
+
+PCA Plot, Volcano Plot, Heatmap, Bubble Plot, Enrichment Plot, and GSEA plot
+
+Contact
+
+For questions or feedback, please reach out to:
+
+Name: Dr. Tej Sharma, PostDoc Dr. RemiAdele Lab 
+Email: tejsharm@buffalo.edu
+Institution: Jacobs School of Medecine and Biomedical Sciences
+Feel free to open an issue in this repository for further assistance.
