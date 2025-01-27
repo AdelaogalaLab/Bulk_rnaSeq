@@ -2,7 +2,7 @@
 
 **Introduction**
 
-RNA sequencing (RNA-seq) is a powerful technique used to analyze the transcriptome of an organism, providing insights into gene expression patterns under various conditions. In this guide, we outline a comprehensive pipeline for processing RNA-seq data, specifically tailored raw data acquisition that we generated out lab to complete downstream analysis. This pipeline encompasses:
+RNA sequencing (RNA-seq) is a powerful technique used to analyze the transcriptome of an organism, providing insights into gene expression patterns under various conditions. In this guide, we outline a comprehensive pipeline for processing RNA-seq data, specifically tailored from raw data acquisition to complete downstream analysis. This pipeline encompasses:
 
 Data Acquisition: Retrieving raw sequencing data.
 Quality Control: Assessing and ensuring the quality of the raw data.
