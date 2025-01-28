@@ -203,7 +203,7 @@ Visualization Examples
 PCA Plot, Volcano Plot, Heatmap, Bubble Plot, Enrichment Plot, and GSEA plot
 
 
-```
+***
 ***Whole Exome Sequencing***
 
 Sarek is a robust bioinformatics workflow developed using Nextflow, a specialized framework designed for scalable and reproducible computational tasks. The intuitive structure of Nextflow facilitates easy interpretation, modification, and expansion of workflows. Sarek incorporates efficient error-handling mechanisms to detect and address issues such as software or hardware failures. Furthermore, the workflow supports seamless resumption of incomplete analyses, allowing users to restart from any stage without complications.
