@@ -41,9 +41,9 @@ nextflow run /../nf-core-rnaseq-3.12.0/workflow/ \
   --max_cpus 32
 
 ```
-Explanation of SLURM Parameters
---time: Total runtime of the job (72 hours).
---nodes: Number of nodes requested (1 node with 32 cores).
+Explanation of SLURM Parameters\
+--time: Total runtime of the job (72 hours).\
+--nodes: Number of nodes requested (1 node with 32 cores).\
 --mem: Memory allocation (256 GB).
 --job-name: Job name for easy identification in the job queue.
 --output: Output log file for pipeline progress and errors.
