@@ -201,3 +201,61 @@ All Regulated Genes: All_UpandDown_regulatedGenes_Selected_Contrasts.csv
 Visualization Examples
 
 PCA Plot, Volcano Plot, Heatmap, Bubble Plot, Enrichment Plot, and GSEA plot
+
+
+```
+***Whole Exome Sequencing***
+
+Sarek is a robust bioinformatics workflow developed using Nextflow, a specialized framework designed for scalable and reproducible computational tasks. The intuitive structure of Nextflow facilitates easy interpretation, modification, and expansion of workflows. Sarek incorporates efficient error-handling mechanisms to detect and address issues such as software or hardware failures. Furthermore, the workflow supports seamless resumption of incomplete analyses, allowing users to restart from any stage without complications.
+Nextflow’s versatility enables Sarek to operate across diverse computational environments, including high-performance computing (HPC) cluster systems (e.g., Slurm) and container orchestration platforms (e.g., Kubernetes). It also integrates with cloud services such as Google Cloud and AWS, making it highly adaptable for varied research needs. As part of the nf-core ecosystem (https://nf-co.re), Sarek benefits from extensive validation and a user-friendly interface, ensuring widespread applicability and reliability.
+To enhance reproducibility and ease of deployment, Sarek packages all required tools using Conda and hosts pre-built container images on DockerHub (https://hub.docker.com). This setup allows users to run Sarek workflows seamlessly within Conda environments or using container technologies such as Docker and Singularity (Kurtzer et al., 2017).
+
+**Resource Requirements**
+
+Efficient execution of Sarek requires computational nodes with the following specifications:
+•	At least 20 logical processors on a single physical CPU to handle parallelized tasks.
+•	A minimum of 128 GB RAM.
+•	At least 4 TB of free storage in the input/output working directory.
+Storage usage includes approximately 1.4 TB for output files (e.g., BAM, CRAM, annotated VCF, and CNV files) and 2.3 TB for temporary data, which can be deleted after the workflow is complete unless re-runs from intermediate states are required.
+
+**Computational Efficiency**
+Sarek leverages available computational resources effectively by distributing tasks across 20 logical processors. The workflow divides the genome into smaller chunks, each processed as an independent core job, with results merged and sorted in a final step. Many tools utilized within Sarek are inherently parallelized, while others employ a scatter-gather approach to optimize CPU utilization and minimize wall-clock runtime. This design ensures efficient performance on HPC systems.
+For this study, the complete Sarek workflow, including preprocessing, variant calling, and annotation, was executed in 7 hours and 58 minutes. The workflow required approximately three times the storage of the original input data, underscoring the need for adequate computational resources.
+
+##Implementation:##
+
+**Variant Calling and Filtering**
+Somatic Single-Nucleotide Variants (SNVs) and Insertion/Deletion (Indel) Calling
+Somatic SNVs and indels were identified using Mutect2 from the GATK toolkit (v4.3.0.0). Mutect2 was configured in tumor-only mode, utilizing its Bayesian model to distinguish somatic mutations from sequencing artifacts. Default settings were applied unless otherwise specified. Variants passing the default quality control filters (PASS) were retained for downstream analysis. To enhance the reliability of the results, stringent quality thresholds and post-calling filtering were employed to ensure high-confidence variant detection.
+The validity of variant calls was evaluated by cross-comparing results with Strelka, SnpEff, and Control-FREECanalyses. These tools were executed within the nf-core/sarek (v3.4.0) pipeline and as standalone applications. This multi-tool validation approach ensured consistency and minimized potential biases in variant detection.
+ 
+**Filtering Criteria**
+To ensure high-confidence variants for downstream analysis, filtering was performed according to the following criteria:
+1.	PASS Filter: Variants were required to pass the default quality filters applied by the respective variant callers.
+2.	Chromosomal Location: Variants were restricted to chromosomes 1–22, X, or Y.
+3.	Variant Allele Frequency (VAF): A minimum VAF threshold of 0.05 was applied.
+4.	Alternate Allele Depth: Variants called by Mutect2 were required to have a minimum of three alternate allele (ALT) reads.
+5.	Mutect2 Exclusivity: Only variants identified by Mutect2 were retained for further analysis.
+These filtering steps ensured the inclusion of biologically and clinically relevant variants while reducing false positives.
+ 
+**Variant Annotation**
+Variant annotation was performed using SnpEff (v4.3t), which categorizes variants based on their functional impact using a four-tier classification system:
+•	HIGH: Variants predicted to have disruptive effects on protein function (e.g., frameshift or nonsense mutations).
+•	MODERATE: Variants likely to affect protein effectiveness without complete disruption (e.g., missense mutations).
+•	LOW: Variants unlikely to significantly alter protein behavior (e.g., synonymous mutations).
+•	MODIFIER: Variants located in non-coding regions or regulatory elements.
+SnpEff annotations were used to prioritize variants for downstream functional and clinical interpretation.
+ 
+**Copy Number Variation (CNV) Analysis**
+Copy number variants were detected using CNVkit (v0.9.12). The analysis was conducted in tumor-only mode, employing default parameters for segmentation and gene-level copy number estimation. CNVkit leverages read depth and coverage metrics to identify regions of copy number gain or loss.
+ 
+**Mutational Analysis**
+Somatic mutations were identified using Mutect2 (GATK v4.3.0.0) and copy number variants (CNVs) were detected using CNVkit (v0.9.12). The identified mutations from Mutect2 were curated and validated by cross-referencing them with regions of copy number gain or loss from CNVkit. This integration ensured that mutations were not only present but also located within genomic regions exhibiting structural alterations, increasing their likelihood of biological relevance.
+Validated mutations were further assessed for oncogenic potential using publicly available databases:
+•	OncoKB: To determine the oncogenicity and clinical actionability of the mutations.
+•	COSMIC: To validate the presence of mutations in cancer-specific datasets.
+•	gnomAD: To exclude common germline variants based on population allele frequencies.
+•	ClinVar: To identify mutations with known clinical significance.
+Mutations classified as oncogenic or likely oncogenic based on these databases were selected for further analysis. Genes harboring these mutations were included in an oncoprint to visualize mutation patterns, co-occurrence, and frequency across samples.
+
+
