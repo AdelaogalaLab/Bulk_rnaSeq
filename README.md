@@ -103,10 +103,10 @@ This repository contains the R code and analysis steps for the bulk rna sequenci
 
 ## Overview
 This project focuses on differential gene expression analysis, GSEA, bubble plot, and pathway enrichment analysis to identify the biological significance of MECOM regulation. Key methodologies include:
-- **RNA-Seq normalization and filtering**
-- **Visualization of differential expression results using volcano plots, bubble plots, heatmaps, and Venn diagrams**
-- - **Gene Set Enrichment Analysis (GSEA)**
-- **Identification of overlapping upregulated and downregulated genes**
+- *RNA-Seq normalization and filtering*
+- *Visualization of differential expression results using volcano plots, bubble plots, heatmaps, and Venn diagrams*
+- *Gene Set Enrichment Analysis (GSEA)*
+- *Identification of overlapping upregulated and downregulated genes*
 
 ---
 
