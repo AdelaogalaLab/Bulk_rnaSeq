@@ -1,0 +1,220 @@
+
+```{r}
+setwd("Survival_plot")
+
+```
+```{r}
+
+# Load required libraries
+library(msigdbr)
+library(clusterProfiler)
+library(dplyr)
+library(tidyr)
+library(survival)
+library(survminer)
+library(readr)
+
+
+expression_data <- read_tsv("MECOM_Project/Mecom_paper/data_mrna_seq_fpkm_capture_zscores_ref_all_samples.txt", 
+                            col_names = TRUE, show_col_types = FALSE)
+
+expr_matrix <- as.matrix(expression_data[,-1])
+
+
+rownames(expr_matrix) <- expression_data$Hugo_Symbol  # Set gene symbols as row names
+
+str(expr_matrix)
+
+head(expression_data[1:5,])
+
+# Prepare expression data for TopTable
+expression_long <- expression_data %>%
+  pivot_longer(cols = -Hugo_Symbol, names_to = "SAMPLE_ID", values_to = "zscore")
+
+msigdb <- msigdbr(species = "Homo sapiens")
+
+# Extract only C3 category gene sets
+c3_gene_sets <- msigdb %>%
+  dplyr::filter(gs_cat == "C3") %>%
+  transmute(ont = gs_name, gene = gene_symbol)  # Keep gene set name and genes
+
+# Define EVI1-related gene sets of interest
+evi_gene_sets_interest <- c("EVI1_01", "EVI1_02", "EVI1_03", "EVI1_04", "EVI1_05", "EVI1_06")
+
+# Bind EVI1 gene sets into the full set of gene sets 
+all_sets <- c3_gene_sets  
+
+
+# Convert expression data to long format
+expression_long <- expression_data %>%
+  pivot_longer(cols = -Hugo_Symbol, names_to = "SAMPLE_ID", values_to = "zscore")
+
+# Ensure Expression Data Matches Gene Sets
+filtered_expression <- expression_long %>%
+  dplyr::filter(Hugo_Symbol %in% all_sets$gene)
+
+gsea_results <- lapply(unique(filtered_expression$SAMPLE_ID), function(sample_id) {
+  sample_data <- filtered_expression %>%
+    dplyr::filter(SAMPLE_ID == sample_id) %>%
+    arrange(desc(zscore)) %>%  
+    drop_na(zscore)  
+
+  # Prepare ranked list for GSEA
+  geneList <- sample_data$zscore
+  names(geneList) <- sample_data$Hugo_Symbol
+
+  # Ensure geneList is numeric and sorted decreasingly
+  geneList <- geneList[!is.na(geneList)]  # Remove NAs
+  geneList <- sort(geneList, decreasing = TRUE)  # Ensure decreasing order
+
+  # Run GSEA using all_sets (includes EVI1)
+  gsea_result <- GSEA(geneList, TERM2GENE = all_sets, pvalueCutoff = 1)
+
+  # Store sample ID for results
+  gsea_result@result %>% mutate(SAMPLE_ID = sample_id)
+})
+
+gsea_results_df <- bind_rows(lapply(gsea_results, function(df) {
+    df %>% dplyr::select(SAMPLE_ID, ID, NES, p.adjust)
+})) %>%
+distinct() 
+
+sample_classification <- gsea_results_df %>%
+  group_by(SAMPLE_ID) %>%
+  summarize(
+    MECOM_status = case_when(
+      mean(NES) > 0 ~ "MECOM-high",
+      mean(NES) < 0 ~ "MECOM-low",
+      TRUE ~ "Unchanged"
+    ),
+    NES = mean(NES),
+    p_adjust = mean(p.adjust)  
+  )
+```
+
+```{r}
+library(survival)
+library(survminer)
+
+sample_mapping <- read_tsv("/Users/tejsharm/Desktop/MECOM_Project/Mecom_paper/data_clinical_sample.txt",
+                           skip = 4, col_names = TRUE, show_col_types = FALSE)
+
+# Remove leading/trailing spaces and ensure character format
+sample_mapping <- sample_mapping %>%
+    mutate(SAMPLE_ID = trimws(as.character(SAMPLE_ID)),
+           PATIENT_ID = trimws(as.character(PATIENT_ID)))
+
+
+# Ensure SAMPLE_ID is properly formatted in sample_classification
+sample_classification <- sample_classification %>%
+    mutate(SAMPLE_ID = trimws(as.character(SAMPLE_ID)))
+
+# Merge sample classification with sample mapping to get PATIENT_ID
+sample_classification <- sample_classification %>%
+    left_join(sample_mapping, by = "SAMPLE_ID")
+
+
+survival_data <- read_tsv("/Users/tejsharm/Desktop/MECOM_Project/Mecom_paper/data_clinical_patient.txt",
+                          skip = 4, col_names = TRUE, show_col_types = FALSE)
+
+
+# Convert survival status to binary (1 = Deceased, 0 = Alive)
+survival_data <- survival_data %>%
+  mutate(OS_STATUS = ifelse(OS_STATUS == "1:DECEASED", 1, 0))
+
+```
+
+```{r}
+# Ensure PATIENT_ID is character for merging
+survival_data <- survival_data %>%
+    mutate(PATIENT_ID = trimws(as.character(PATIENT_ID)))
+
+# Merge classification with survival data
+merged_data <- sample_classification %>%
+    left_join(survival_data, by = "PATIENT_ID") %>%
+    drop_na(OS_MONTHS, OS_STATUS)  
+
+# Ensure OS_MONTHS and OS_STATUS are numeric
+merged_data$OS_MONTHS <- as.numeric(merged_data$OS_MONTHS)
+merged_data$OS_STATUS <- as.numeric(merged_data$OS_STATUS)
+
+# Check missing values
+cat("Missing OS_STATUS:", sum(is.na(merged_data$OS_STATUS)), "\n")
+cat("Missing OS_MONTHS:", sum(is.na(merged_data$OS_MONTHS)), "\n")
+
+# Ensure MECOM_status is a factor
+merged_data$MECOM_status <- as.factor(merged_data$MECOM_status)
+
+# Kaplan-Meier Survival Analysis
+if (sum(is.na(merged_data$OS_STATUS)) == 0 & sum(is.na(merged_data$OS_MONTHS)) == 0) {
+    km_fit <- survfit(Surv(OS_MONTHS, OS_STATUS) ~ MECOM_status, data = merged_data)
+
+    # Plot Kaplan-Meier curve
+    ggsurvplot(km_fit, data = merged_data, pval = TRUE, conf.int = TRUE,
+               risk.table = TRUE, legend.title = "MECOM Status",
+               xlab = "Time (months)", ylab = "Survival Probability",
+               palette = c("red", "blue"))
+} else {
+    cat("Error: Still missing OS_STATUS or OS_MONTHS. Check merging steps.\n")
+}
+
+
+# Kaplan-Meier Survival Analysis
+km_fit <- survfit(Surv(OS_MONTHS, OS_STATUS) ~ MECOM_status, data = merged_data)
+
+# Plot Kaplan-Meier survival curve
+p1 <- ggsurvplot(
+    km_fit,
+    data = merged_data,
+    conf.int = TRUE, 
+    pval = TRUE,  
+    risk.table = TRUE,  
+    xlab = "Time (Months)",
+    ylab = "Survival Probability",
+    ggtheme = theme_minimal()  # Clean theme
+)
+
+# Save the extracted ggplot object
+ggsave("KM_plot.pdf", plot = p1$plot, width = 14, height = 14, dpi = 300)
+
+```
+
+```{r}
+
+library(survminer)
+library(ggplot2)
+library(cowplot)
+
+# Generate Kaplan-Meier plot
+p1 <- ggsurvplot(
+    km_fit,
+    data = merged_data,
+    conf.int = TRUE, 
+    pval = TRUE,  
+    risk.table = TRUE, 
+    xlab = "Time (Months)",
+    ylab = "Survival Probability",
+    ggtheme = theme_minimal(), 
+    palette = c("#E63946", "blue"),  
+    font.x = c(16, "bold"),  
+    font.y = c(16, "bold"), 
+    font.tickslab = c(14, "bold"),  
+    font.legend = c(14, "bold"),  
+    font.title = c(18, "bold"),  
+    surv.median.line = "hv",  
+    legend.title = " ",
+    legend.labs = c("MECOM-high", "MECOM-low")
+
+)
+
+# Combine both the survival plot & risk table
+combined_plot <- plot_grid(
+    p1$plot + theme(axis.text = element_text(size = 15, face = "bold")), 
+    p1$table + theme(axis.text = element_text(size = 15, face = "bold")),  
+    ncol = 1, align = "v", rel_heights = c(3, 1)
+)
+
+# Save with high resolution
+ggsave("KM_Final.pdf", plot = combined_plot, width = 16, height = 12, dpi = 900)
+
+```
